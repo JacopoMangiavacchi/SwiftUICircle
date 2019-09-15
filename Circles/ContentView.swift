@@ -73,7 +73,16 @@ struct CircleView: Shape {
                     var ix = i
                     var iy = i
                     
-                    if r > 0 && c > 0 {
+                    if r == 0 {
+                        ix *= c
+                        iy *= c
+
+                    }
+                    else if c == 0 {
+                        ix *= r
+                        iy *= r
+                    }
+                    else {
                         ix *= r
                         iy *= c
                     }
