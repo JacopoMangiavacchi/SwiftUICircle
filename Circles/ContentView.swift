@@ -63,12 +63,16 @@ struct CircleView: Shape {
     var pct: Double
     let r: Int
     let c: Int
+    @State var lastX: Int = 359
+    @State var lastY: Int = 359
+
 
     func drawFigure(scaleX: Double, scaleY: Double) -> Path {
         return Path { p in
             if r > 0 || c > 0 {
-                p.move(to: CGPoint(x: x_cos[359] * scaleX, y: y_sin[359] * scaleY))
+                p.move(to: CGPoint(x: x_cos[lastX] * scaleX, y: y_sin[lastX] * scaleY))
 
+                var (x, y) = (0.0, 0.0)
                 for i in 0..<Int(pct*360) {
                     var ix = i
                     var iy = i
@@ -87,10 +91,13 @@ struct CircleView: Shape {
                         iy *= c
                     }
 
-                    let x = x_cos[ix % 360] * scaleX
-                    let y = y_sin[iy % 360] * scaleY
+                    x = x_cos[ix % 360] * scaleX
+                    y = y_sin[iy % 360] * scaleY
                     p.addLine(to: CGPoint(x: x, y: y))
                 }
+                
+                p.addEllipse(in: CGRect(x: x, y: y, width: 5, height: 5))
+                p.addEllipse(in: CGRect(x: x, y: y, width: 10, height: 10))
             }
         }
     }
