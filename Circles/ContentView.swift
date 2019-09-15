@@ -35,12 +35,14 @@ func color(r: Int, c: Int) -> Color {
 }
 
 struct ContentView: View {
+    @State var pct: Double = 0.0
+    
     var body: some View {
         HStack {
             ForEach((0..<8), id: \.self) {r in
                 VStack {
                     ForEach((0..<8), id: \.self) {c in
-                        CircleView(r:r, c:c)
+                        CircleView(pct: self.pct, r:r, c:c)
                             .stroke(color(r:r, c:c), lineWidth: 2)
                             .padding(2)
                     }
@@ -49,19 +51,25 @@ struct ContentView: View {
         }
         .padding()
         .aspectRatio(contentMode: ContentMode.fit)
+        .onAppear() {
+            withAnimation(Animation.linear(duration: 10.0).repeatForever(autoreverses: false)) {
+                self.pct = 1.0
+            }
+        }
     }
 }
 
 struct CircleView: Shape {
+    var pct: Double
     let r: Int
     let c: Int
 
-    func drawFigure() -> Path {
+    func drawFigure(scaleX: Double, scaleY: Double) -> Path {
         return Path { p in
             if r > 0 || c > 0 {
-                p.move(to: CGPoint(x: x_cos[359], y: y_sin[359]))
+                p.move(to: CGPoint(x: x_cos[359] * scaleX, y: y_sin[359] * scaleY))
 
-                for i in 0..<360 {
+                for i in 0..<Int(pct*360) {
                     var ix = i
                     var iy = i
                     
@@ -70,8 +78,8 @@ struct CircleView: Shape {
                         iy *= c
                     }
 
-                    let x = x_cos[ix % 360]
-                    let y = y_sin[iy % 360]
+                    let x = x_cos[ix % 360] * scaleX
+                    let y = y_sin[iy % 360] * scaleY
                     p.addLine(to: CGPoint(x: x, y: y))
                 }
             }
@@ -79,12 +87,16 @@ struct CircleView: Shape {
     }
     
     func path(in rect: CGRect) -> Path {
-        let figure = drawFigure()
-        
-        let bounds = figure.boundingRect
+        let bounds = CGRect(x: 0, y: 0, width: 2, height: 2)
         let scaleX = rect.size.width/bounds.size.width
         let scaleY = rect.size.height/bounds.size.height
-        return figure.applying(CGAffineTransform(scaleX: scaleX, y: scaleY))
+
+        return drawFigure(scaleX: Double(scaleX), scaleY: Double(scaleY))
+    }
+    
+    var animatableData: Double {
+        get { return pct }
+        set { pct = newValue }
     }
 }
 
