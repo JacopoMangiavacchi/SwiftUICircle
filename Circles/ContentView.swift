@@ -16,6 +16,23 @@ var y_sin: [Double] = {
     return (0..<360).map {1.0 + sin(Double($0) * Double.pi/180)}
 }()
 
+let colors = [NSColor.red, NSColor.orange, NSColor.yellow, NSColor.green, NSColor.blue, NSColor.cyan, NSColor.purple]
+
+func color(r: Int, c: Int) -> Color {
+    if r == 0 && c == 0 {
+        return Color.white
+    }
+    
+    if c == 0 {
+        return Color(colors[r - 1])
+    }
+
+    if r == 0 {
+        return Color(colors[c - 1])
+    }
+    
+    return Color(colors[r - 1].blended(withFraction: 0.5, of: colors[c - 1])!)
+}
 
 struct ContentView: View {
     var body: some View {
@@ -24,7 +41,7 @@ struct ContentView: View {
                 VStack {
                     ForEach((0..<8), id: \.self) {c in
                         CircleView(r:r, c:c)
-                            .stroke(Color.purple, lineWidth: 3)
+                            .stroke(color(r:r, c:c), lineWidth: 2)
                             .padding(2)
                     }
                 }
