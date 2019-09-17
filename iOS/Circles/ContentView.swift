@@ -49,12 +49,59 @@ struct ContentView: View {
                 ForEach((0..<8), id: \.self) { r in
                     VStack {
                         ForEach((0..<8), id: \.self) { c in
-                            CircleView(pct: self.pct, r:r, c:c)
-                                .stroke(color(r:r, c:c), lineWidth: 2.0)
-                                .padding(2)
+                            Group {
+                                if r == 0 && c == 0 {
+                                    NavigationLink(destination: Text("go")) {
+                                        ZStack {
+                                            CircleView(pct: self.pct, r:1, c:1)
+                                                .stroke(color(r:r, c:c), lineWidth: 2.0)
+                                                .padding(2)
+//                                            Text("10s")
+//                                                .foregroundColor(.gray)
+                                        }
+                                    }
+                                    .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
+                                    .background(Color.black)
+                                }
+                                else if r == 0 {
+                                    NavigationLink(destination: Text("ok")) {
+                                        ZStack {
+                                            CircleView(pct: self.pct, r:r, c:c)
+                                                .stroke(color(r:r, c:c), lineWidth: 2.0)
+                                                .padding(2)
+//                                            Text("2x")
+//                                                .foregroundColor(.white)
+                                        }
+                                    }
+                                    .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
+                                    .background(Color.black)
+                                }
+                                else if c == 0 {
+                                    NavigationLink(destination: Text("ok")) {
+                                        ZStack {
+                                            CircleView(pct: self.pct, r:r, c:c)
+                                                .stroke(color(r:r, c:c), lineWidth: 2.0)
+                                                .padding(2)
+//                                            Text("1x")
+//                                                .foregroundColor(.white)
+                                        }
+                                    }
+                                    .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
+                                    .background(Color.black)
+                                }
+                                else {
+                                    NavigationLink(destination: Text("ok")) {
+                                        ZStack {
+                                            CircleView(pct: self.pct, r:r, c:c)
+                                                .stroke(color(r:r, c:c), lineWidth: 2.0)
+                                                .padding(2)
+                                        }
+                                    }
+                                    .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
+                                    .background(Color.black)
+                                }
                             }
-                            .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
-                            .background(Color.black)
+                        }
                     }
                 }
             }
