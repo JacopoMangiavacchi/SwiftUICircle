@@ -37,25 +37,51 @@ func color(r: Int, c: Int) -> Color {
 struct ContentView: View {
     @State var pct: Double = 0.0
     
+    @State var isPresented = false
+    
+    var modalPresentation: some View {
+        NavigationView {
+            Text("Hello World")
+                .font(.caption)
+//                .navigationBarTitle(Text("Modal Contents"))
+//                .navigationBarItems(trailing: Button(action: { self.isPresented = false } ) { Text("Done") })
+        }
+    }
+    
     var body: some View {
-        HStack {
-            ForEach((0..<8), id: \.self) {r in
-                VStack {
-                    ForEach((0..<8), id: \.self) {c in
-                        CircleView(pct: self.pct, r:r, c:c)
-                            .stroke(color(r:r, c:c), lineWidth: 2)
-                            .padding(2)
+        NavigationView {
+            HStack {
+                ForEach((0..<8), id: \.self) { r in
+                    VStack {
+                        ForEach((0..<8), id: \.self) { c in
+                            Group {
+                                if r == 0 && c == 0 {
+                                    Button(action: { self.isPresented = true }) {
+                                        Text("10")
+                                    }
+                                    .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
+                                    .background(Color.gray)
+                                    .mask(Circle())
+                                }
+                                else {
+                                    CircleView(pct: self.pct, r:r, c:c)
+                                        .stroke(color(r:r, c:c), lineWidth: 2.0)
+                                        .padding(2)
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }
-        .padding()
-        .aspectRatio(contentMode: ContentMode.fit)
-        .onAppear() {
-            withAnimation(Animation.linear(duration: 10.0).repeatForever(autoreverses: false)) {
-                self.pct = 1.0
+            .padding()
+            .aspectRatio(contentMode: ContentMode.fit)
+            .onAppear() {
+                withAnimation(Animation.linear(duration: 10.0).repeatForever(autoreverses: false)) {
+                    self.pct = 1.0
+                }
             }
         }
+        .presentation( isPresented ? Modal(modalPresentation, onDismiss: { self.isPresented.toggle() }) : nil )
     }
 }
 
