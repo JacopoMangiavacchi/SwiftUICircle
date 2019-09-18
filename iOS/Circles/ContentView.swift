@@ -54,10 +54,9 @@ struct ContentView: View {
                                     NavigationLink(destination: Text("go")) {
                                         ZStack {
                                             CircleView(pct: self.pct, r:1, c:1)
-                                                .stroke(color(r:r, c:c), lineWidth: 2.0)
+                                                .stroke(Color.gray, lineWidth: 2.0)
                                                 .padding(2)
-//                                            Text("10s")
-//                                                .foregroundColor(.gray)
+                                                .overlay(Text("10s").foregroundColor(.gray))
                                         }
                                     }
                                     .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
@@ -69,8 +68,7 @@ struct ContentView: View {
                                             CircleView(pct: self.pct, r:r, c:c)
                                                 .stroke(color(r:r, c:c), lineWidth: 2.0)
                                                 .padding(2)
-//                                            Text("2x")
-//                                                .foregroundColor(.white)
+                                                .overlay(Text("\(c)x").foregroundColor(color(r:r, c:c)))
                                         }
                                     }
                                     .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
@@ -82,8 +80,7 @@ struct ContentView: View {
                                             CircleView(pct: self.pct, r:r, c:c)
                                                 .stroke(color(r:r, c:c), lineWidth: 2.0)
                                                 .padding(2)
-//                                            Text("1x")
-//                                                .foregroundColor(.white)
+                                                .overlay(Text("\(r)x").foregroundColor(color(r:r, c:c)))
                                         }
                                     }
                                     .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
