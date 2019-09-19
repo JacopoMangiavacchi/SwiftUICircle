@@ -8,36 +8,28 @@
 
 import SwiftUI
 
-var x_cos: [Double] = {
-    return (0..<360).map {1.0 + cos(Double(($0 - 90) % 360) * Double.pi/180)}
-}()
-
-var y_sin: [Double] = {
-    return (0..<360).map {1.0 + sin(Double(($0 - 90) % 360) * Double.pi/180)}
-}()
-
-let colors = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.purple]
+let colors = [UIColor.white, UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.purple]
 
 func color(r: Int, c: Int) -> Color {
     if r == 0 && c == 0 {
-        return Color.gray
+        return Color(colors[0])
     }
     
     if c == 0 {
-        return Color(colors[r - 1])
+        return Color(colors[r])
     }
 
     if r == 0 {
-        return Color(colors[c - 1])
+        return Color(colors[c])
     }
     
-    let comp1 = colors[r - 1].cgColor.components!
-    let comp2 = colors[c - 1].cgColor.components!
+    let comp1 = colors[r].cgColor.components!
+    let comp2 = colors[c].cgColor.components!
 
     return Color(red: Double(comp1[0] + comp2[0]) / 2.0,
                  green: Double(comp1[1] + comp2[1]) / 2.0,
                  blue: Double(comp1[2] + comp2[2]) / 2.0)
-//    return Color(colors[r - 1].blended(withFraction: 0.5, of: colors[c - 1])!)
+//    return Color(colors[r].blended(withFraction: 0.5, of: colors[c])!)
 }
 
 struct DetailView: View {
@@ -54,6 +46,7 @@ struct ContentView: View {
     @State var pct: Double = 0.0
     @State var animationTime = 10.0
     @State var modalDisplayed = false
+    @State var startAngle = 90
     
     var body: some View {
         HStack {
@@ -62,16 +55,16 @@ struct ContentView: View {
                     ForEach((0..<8), id: \.self) { c in
                         Group {
                             if r == 0 && c == 0 {
-                                CircleView(pct: self.$pct, modalDisplayed: self.$modalDisplayed, color: Color.white, text: "10s", r: 1, c: 1)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:0, c:0), text: "10s", r: 1, c: 1)
                             }
                             else if r == 0 {
-                                CircleView(pct: self.$pct, modalDisplayed: self.$modalDisplayed, color: color(r:r, c:c), text: "\(c)x", r: r, c: c)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:r, c:c), text: "\(c)x", r: r, c: c)
                             }
                             else if c == 0 {
-                                CircleView(pct: self.$pct, modalDisplayed: self.$modalDisplayed, color: color(r:r, c:c), text: "\(r)x", r: r, c: c)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:r, c:c), text: "\(r)x", r: r, c: c)
                             }
                             else {
-                                CircleView(pct: self.$pct, modalDisplayed: self.$modalDisplayed, color: color(r:r, c:c), text: "", r: r, c: c)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:r, c:c), text: "", r: r, c: c)
                             }
                         }
                     }
@@ -88,8 +81,9 @@ struct ContentView: View {
 }
 
 struct CircleView: View {
-    @Binding var pct: Double
     @Binding var modalDisplayed: Bool
+    let pct: Double
+    let startAngle: Int
     let color: Color
     let text: String
     let r: Int
@@ -97,7 +91,7 @@ struct CircleView: View {
 
     var body: some View {
         Button(action: { self.modalDisplayed = true }) {
-            CircleShape(pct: pct, r:r, c:c)
+            CircleShape(pct: pct, startAngle: self.startAngle, r:r, c:c)
                 .stroke(color, lineWidth: 2.0)
                 .padding(2)
                 .overlay(Text(text).foregroundColor(color))
@@ -113,8 +107,20 @@ struct CircleView: View {
 
 struct CircleShape: Shape {
     var pct: Double
+    let startAngle: Int
     let r: Int
     let c: Int
+    let x_cos: [Double]
+    let y_sin: [Double]
+    
+    init(pct: Double, startAngle: Int, r: Int, c: Int) {
+        self.pct = pct
+        self.r = r
+        self.c = c
+        self.startAngle = startAngle
+        self.x_cos = (0..<360).map {1.0 + cos(Double(($0 - startAngle) % 360) * Double.pi/180)}
+        self.y_sin = (0..<360).map {1.0 + sin(Double(($0 - startAngle) % 360) * Double.pi/180)}
+    }
 
     func drawFigure(scaleX: Double, scaleY: Double) -> Path {
         return Path { p in
