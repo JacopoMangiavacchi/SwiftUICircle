@@ -10,26 +10,9 @@ import SwiftUI
 
 let colors = [UIColor.white, UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.purple]
 
-func color(r: Int, c: Int) -> Color {
-    if r == 0 && c == 0 {
-        return Color(colors[0])
-    }
-    
-    if c == 0 {
-        return Color(colors[r])
-    }
-
-    if r == 0 {
-        return Color(colors[c])
-    }
-    
-    let comp1 = colors[r].cgColor.components!
-    let comp2 = colors[c].cgColor.components!
-
-    return Color(red: Double(comp1[0] + comp2[0]) / 2.0,
-                 green: Double(comp1[1] + comp2[1]) / 2.0,
-                 blue: Double(comp1[2] + comp2[2]) / 2.0)
-//    return Color(colors[r].blended(withFraction: 0.5, of: colors[c])!)
+struct CircleData {
+    let speed: Int
+    let color: UIColor
 }
 
 struct DetailView: View {
@@ -47,7 +30,38 @@ struct ContentView: View {
     @State var animationTime = 10.0
     @State var modalDisplayed = false
     @State var startAngle = 90
-    
+    @State var rows:[CircleData] = {
+        var array = [CircleData]()
+        for i in 1...7 {
+            array.append(CircleData(speed: i, color: colors[i]))
+        }
+        return array
+    }()
+    @State var columns:[CircleData] = {
+        var array = [CircleData]()
+        for i in 1...7 {
+            array.append(CircleData(speed: i, color: colors[i]))
+        }
+        return array
+    }()
+
+    func color(r: Int, c: Int) -> Color {
+        if c == 0 {
+            return Color(colors[r])
+        }
+
+        if r == 0 {
+            return Color(colors[c])
+        }
+        
+        let comp1 = colors[r].cgColor.components!
+        let comp2 = colors[c].cgColor.components!
+
+        return Color(red: Double(comp1[0] + comp2[0]) / 2.0,
+                     green: Double(comp1[1] + comp2[1]) / 2.0,
+                     blue: Double(comp1[2] + comp2[2]) / 2.0)
+    }
+
     var body: some View {
         HStack {
             ForEach((0..<8), id: \.self) { r in
@@ -55,16 +69,16 @@ struct ContentView: View {
                     ForEach((0..<8), id: \.self) { c in
                         Group {
                             if r == 0 && c == 0 {
-                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:0, c:0), text: "10s", r: 1, c: 1)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: self.color(r:0, c:0), text: "10s", r: 1, c: 1)
                             }
                             else if r == 0 {
-                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:r, c:c), text: "\(c)x", r: r, c: c)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: self.color(r:r, c:c), text: "\(c)x", r: r, c: c)
                             }
                             else if c == 0 {
-                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:r, c:c), text: "\(r)x", r: r, c: c)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: self.color(r:r, c:c), text: "\(r)x", r: r, c: c)
                             }
                             else {
-                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: color(r:r, c:c), text: "", r: r, c: c)
+                                CircleView(modalDisplayed: self.$modalDisplayed, pct: self.pct, startAngle: self.startAngle, color: self.color(r:r, c:c), text: "", r: r, c: c)
                             }
                         }
                     }
