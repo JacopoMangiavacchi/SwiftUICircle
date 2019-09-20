@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-let colors = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.purple, UIColor.brown]
+let colors = [UIColor.gray, UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.purple, UIColor.brown]
 
 struct CircleRowColData {
     let speed: Int
@@ -31,15 +31,15 @@ struct CircleState {
     var startAngle = 90.0
     var rows:[CircleRowColData] = {
         var array = [CircleRowColData]()
-        for i in 0..<8 {
-            array.append(CircleRowColData(speed: i + 1, color: colors[i % colors.count]))
+        for i in 0...8 {
+            array.append(CircleRowColData(speed: i > 0 ? i : i + 1, color: colors[i % colors.count]))
         }
         return array
     }()
     var columns:[CircleRowColData] = {
         var array = [CircleRowColData]()
-        for i in 0..<3 {
-            array.append(CircleRowColData(speed: i + 1, color: colors[i % colors.count]))
+        for i in 0...7 {
+            array.append(CircleRowColData(speed:i > 0 ? i : i + 1, color: colors[i % colors.count]))
         }
         return array
     }()
@@ -55,38 +55,38 @@ struct ContentView: View {
     var body: some View {
         HStack {
             // Columns
-            ForEach((0...self.circleState.columns.count), id: \.self) { c in
+            ForEach((0..<self.circleState.columns.count), id: \.self) { c in
                 VStack {
                     // Rows
-                    ForEach((0...self.circleState.rows.count), id: \.self) { r in
+                    ForEach((0..<self.circleState.rows.count), id: \.self) { r in
                         Group {
                             if r == 0 && c == 0 {
                                 CircleView(circleState: self.$circleState,
                                            type: .time,
                                            text: "", // Temporary disaple animation time "\(Int(self.circleState.animationTime))s",
-                                           row: CircleRowColData(speed: 1, color: UIColor.gray),
-                                           col: CircleRowColData(speed: 1, color: UIColor.gray))
+                                           row: r,
+                                           col: c)
                             }
                             else if r == 0 {
                                 CircleView(circleState: self.$circleState,
                                            type: .rowcol,
                                            text: "\(c)x",
-                                           row: self.circleState.columns[c - 1],
-                                           col: self.circleState.columns[c - 1])
+                                           row: r,
+                                           col: c)
                             }
                             else if c == 0 {
                                 CircleView(circleState: self.$circleState,
                                            type: .rowcol,
                                            text: "\(r)x",
-                                           row: self.circleState.rows[r - 1],
-                                           col: self.circleState.rows[r - 1])
+                                           row: r,
+                                           col: c)
                             }
                             else {
                                 CircleView(circleState: self.$circleState,
                                            type: .figure,
                                            text: "",
-                                           row: self.circleState.rows[r - 1],
-                                           col: self.circleState.columns[c - 1])
+                                           row: r,
+                                           col: c)
                             }
                         }
                     }
@@ -106,8 +106,10 @@ struct CircleView: View {
     @Binding var circleState: CircleState
     let type: CircleType
     let text: String
-    let row: CircleRowColData
-    let col: CircleRowColData
+    let row: Int
+    let col: Int
+    let rowData: CircleRowColData
+    let colData: CircleRowColData
     let color: Color
     
     struct ModalDetail: Identifiable {
@@ -119,24 +121,37 @@ struct CircleView: View {
     }
     @State var detail: ModalDetail?
 
-    init(circleState: Binding<CircleState>, type: CircleType, text: String, row: CircleRowColData, col: CircleRowColData) {
+    init(circleState: Binding<CircleState>, type: CircleType, text: String, row: Int, col: Int) {
         self._circleState = circleState
         self.type = type
         self.text = text
         self.row = row
         self.col = col
-        
-        if row.color.cgColor.numberOfComponents < 3 || col.color.cgColor.numberOfComponents < 3 {
-            self.color = Color.gray
+
+        var rowData = circleState.wrappedValue.rows[row]
+        var colData = circleState.wrappedValue.columns[col]
+
+        if col == 0 {
+            rowData = circleState.wrappedValue.rows[row]
+            colData = circleState.wrappedValue.rows[row]
+            self.color = Color(circleState.wrappedValue.rows[row].color)
+        }
+        else if row == 0 {
+            rowData = circleState.wrappedValue.columns[col]
+            colData = circleState.wrappedValue.columns[col]
+            self.color = Color(circleState.wrappedValue.columns[col].color)
         }
         else {
-            let comp1 = row.color.cgColor.components!
-            let comp2 = col.color.cgColor.components!
+            let comp1 = rowData.color.cgColor.components!
+            let comp2 = colData.color.cgColor.components!
 
             self.color = Color(red: Double(comp1[0] + comp2[0]) / 2.0,
                          green: Double(comp1[1] + comp2[1]) / 2.0,
                          blue: Double(comp1[2] + comp2[2]) / 2.0)
         }
+
+        self.rowData = rowData
+        self.colData = colData
     }
     
     func modal(detail: CircleType) -> some View {
@@ -147,7 +162,7 @@ struct CircleView: View {
                 }
             }
             if detail == .rowcol {
-                RowColDetailView() {
+                RowColDetailView(circleState: $circleState) {
                     self.detail = nil
                 }
             }
@@ -164,7 +179,7 @@ struct CircleView: View {
             self.detail = ModalDetail(type: self.type)
             
         }) {
-            CircleShape(pct: self.circleState.pct, startAngle: self.circleState.startAngle, xSpeed: col.speed, ySpeed: row.speed)
+            CircleShape(pct: self.circleState.pct, startAngle: self.circleState.startAngle, xSpeed: colData.speed, ySpeed: rowData.speed)
                 .stroke(self.color, lineWidth: 2.0)
                 .padding(2)
                 .overlay(Text(text).foregroundColor(self.color))
@@ -263,6 +278,7 @@ struct TimeDetailView: View {
 }
 
 struct RowColDetailView: View {
+    @Binding var circleState: CircleState
     var onDismiss: () -> ()
     
     var body: some View {
