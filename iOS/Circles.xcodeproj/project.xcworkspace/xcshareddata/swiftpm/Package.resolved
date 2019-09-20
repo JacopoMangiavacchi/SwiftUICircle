@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "AnglePicker",
+        "repositoryURL": "https://github.com/JacopoMangiavacchi/AnglePicker",
+        "state": {
+          "branch": null,
+          "revision": "d4ad53284412e46dd32b92dc218c3b2af9771960",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "ColorPicker",
         "repositoryURL": "https://github.com/hendriku/ColorPicker",
         "state": {

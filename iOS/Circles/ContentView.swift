@@ -8,6 +8,7 @@
 
 import SwiftUI
 import ColorPicker
+import AnglePicker
 
 let colors = [UIColor.gray, UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.purple, UIColor.brown]
 
@@ -17,7 +18,7 @@ struct CircleRowColData {
 }
 
 struct CircleState {
-    var animate = true {
+    var animate = false {
         didSet {
             pct = animate ? 1.0 : 0.0
         }
@@ -98,6 +99,9 @@ struct ContentView: View {
         .onAppear() {
             withAnimation(self.circleState.animation) {
                 self.circleState.pct = 1.0
+            }
+            if !self.circleState.animate {
+                self.circleState.pct = 0.0
             }
         }
     }
@@ -260,10 +264,10 @@ struct TimeDetailView: View {
                     }
                 }
                 Section(header: Text("Angle")) {
-                    Text("Angle: \(Int(circleState.startAngle))º")
-                    VStack(alignment: .center) {
+                    ZStack(alignment: .center) {
                         AnglePicker(angle: $angle, strokeWidth: 20)
                             .frame(width: 100, height: 100, alignment: .center)
+                        Text("\(Int(circleState.startAngle))º")
                     }
                 }
                 Section(header: Text("Animation")) {
