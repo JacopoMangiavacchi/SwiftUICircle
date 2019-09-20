@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ColorPicker",
+        "repositoryURL": "https://github.com/hendriku/ColorPicker",
+        "state": {
+          "branch": null,
+          "revision": "edee82355c75ff715b1dbe045e05dd60ae557530",
+          "version": "1.0.2"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

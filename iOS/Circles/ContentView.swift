@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import ColorPicker
 
 let colors = [UIColor.gray, UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.purple, UIColor.brown]
 
@@ -70,14 +71,14 @@ struct ContentView: View {
                             else if r == 0 {
                                 CircleView(circleState: self.$circleState,
                                            type: .rowcol,
-                                           text: "\(c)x",
+                                           text: "\(self.circleState.columns[c].speed)x",
                                            row: r,
                                            col: c)
                             }
                             else if c == 0 {
                                 CircleView(circleState: self.$circleState,
                                            type: .rowcol,
-                                           text: "\(r)x",
+                                           text: "\(self.circleState.rows[r].speed)x",
                                            row: r,
                                            col: c)
                             }
@@ -281,6 +282,7 @@ struct RowColDetailView: View {
     let row: Int
     let col: Int
     @Binding var data: CircleRowColData
+    @State var color: Color = .red
     let onDismiss: () -> ()
     
     var body: some View {
@@ -290,6 +292,25 @@ struct RowColDetailView: View {
 //                    Stepper(value: $data.speed, in: 1...10, label: {
                         Text("Speed: \(Int(data.speed))x")
 //                    })
+                    Text("Color: \(data.color.description)")
+                    VStack(alignment: .center) {
+//                        Text("Source of truth: \(String(describing: color))")
+                        ColorPicker(color: $color, strokeWidth: 10)
+                            .frame(width: 100, height: 100, alignment: .center)
+                    }
+                }
+                Section {
+                    Button(action: {
+                        self.circleState.columns.remove(at: self.col)
+                        self.onDismiss()
+                    }) {
+                        Text("Delete").foregroundColor(.red)
+                    }
+                    Button(action: {
+                        self.onDismiss()
+                    }) {
+                        Text("Duplicate").foregroundColor(.green)
+                    }
                 }
                 Section {
                     Button(action: { self.onDismiss() }) {

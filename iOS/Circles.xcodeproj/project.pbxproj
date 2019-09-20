@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C305F0062334B22E008AAF14 /* ColorPicker in Frameworks */ = {isa = PBXBuildFile; productRef = C305F0052334B22E008AAF14 /* ColorPicker */; };
 		C3A38789232FFEBB004EC7B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A38788232FFEBB004EC7B0 /* AppDelegate.swift */; };
 		C3A3878B232FFEBB004EC7B0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A3878A232FFEBB004EC7B0 /* SceneDelegate.swift */; };
 		C3A3878D232FFEBB004EC7B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A3878C232FFEBB004EC7B0 /* ContentView.swift */; };
@@ -31,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C305F0062334B22E008AAF14 /* ColorPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +93,9 @@
 			dependencies = (
 			);
 			name = Circles;
+			packageProductDependencies = (
+				C305F0052334B22E008AAF14 /* ColorPicker */,
+			);
 			productName = Circles;
 			productReference = C3A38785232FFEBB004EC7B0 /* Circles.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +124,9 @@
 				Base,
 			);
 			mainGroup = C3A3877C232FFEBB004EC7B0;
+			packageReferences = (
+				C305F0042334B22E008AAF14 /* XCRemoteSwiftPackageReference "ColorPicker" */,
+			);
 			productRefGroup = C3A38786232FFEBB004EC7B0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -342,6 +350,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C305F0042334B22E008AAF14 /* XCRemoteSwiftPackageReference "ColorPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hendriku/ColorPicker";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C305F0052334B22E008AAF14 /* ColorPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C305F0042334B22E008AAF14 /* XCRemoteSwiftPackageReference "ColorPicker" */;
+			productName = ColorPicker;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C3A3877D232FFEBB004EC7B0 /* Project object */;
 }
