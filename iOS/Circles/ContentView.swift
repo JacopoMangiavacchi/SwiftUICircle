@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 import ColorPicker
 import AnglePicker
 
@@ -249,9 +250,22 @@ struct CircleShape: Shape {
     }
 }
 
+final class AngleStore: ObservableObject {
+    @Published var selection: Angle = Angle() {
+        didSet {
+            print("Selection changed to \(selection.degrees)")
+//            self.objectWillChange.send()
+        }
+    }
+}
+
+
+
+
 struct TimeDetailView: View {
     @Binding var circleState: CircleState
-    @State var angle = Angle()
+//    @State var angle = Angle()
+    @ObservedObject var store = AngleStore()
     let onDismiss: () -> ()
     
     var body: some View {
@@ -263,11 +277,14 @@ struct TimeDetailView: View {
                         Slider(value: $circleState.startAngle, in: 0...360, step: 1)
                     }
                 }
-                Section(header: Text("Angle")) {
+                Section(header: Text("Start Angle")) {
                     ZStack(alignment: .center) {
-                        AnglePicker(angle: $angle, strokeWidth: 20)
+                        AnglePicker(angle: $store.selection, strokeWidth: 20)
                             .frame(width: 100, height: 100, alignment: .center)
-                        Text("\(Int(circleState.startAngle))º")
+                            .onAppear() {
+                                self.store.selection.degrees = self.circleState.startAngle
+                            }
+                        Text("\(Int(store.selection.degrees))º")
                     }
                 }
                 Section(header: Text("Animation")) {
@@ -294,7 +311,7 @@ struct RowColDetailView: View {
     let row: Int
     let col: Int
     @Binding var data: CircleRowColData
-    @State var color: Color = .red
+    @State var color: Color = .blue
     let onDismiss: () -> ()
     
     var body: some View {
@@ -309,6 +326,9 @@ struct RowColDetailView: View {
 //                        Text("Source of truth: \(String(describing: color))")
                         ColorPicker(color: $color, strokeWidth: 20)
                             .frame(width: 100, height: 100, alignment: .center)
+                            .onAppear() {
+                                self.color = Color(self.data.color)
+                            }
                     }
                 }
                 Section {
