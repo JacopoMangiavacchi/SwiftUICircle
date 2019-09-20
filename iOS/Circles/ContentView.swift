@@ -163,7 +163,7 @@ struct CircleView: View {
     func modal(detail: CircleType) -> some View {
         Group {
             if detail == .time {
-                TimeDetailView(circleState: $circleState) {
+                TimeDetailView(circleState: $circleState, store: AngleStore(circleState: $circleState)) {
                     self.detail = nil
                 }
             }
@@ -251,32 +251,27 @@ struct CircleShape: Shape {
 }
 
 final class AngleStore: ObservableObject {
+    @Binding var circleState: CircleState
+
+    init(circleState: Binding<CircleState>) {
+        self._circleState = circleState
+    }
+    
     @Published var selection: Angle = Angle() {
         didSet {
-            print("Selection changed to \(selection.degrees)")
-//            self.objectWillChange.send()
+            circleState.startAngle = selection.degrees
         }
     }
 }
 
-
-
-
 struct TimeDetailView: View {
     @Binding var circleState: CircleState
-//    @State var angle = Angle()
-    @ObservedObject var store = AngleStore()
+    @ObservedObject var store: AngleStore
     let onDismiss: () -> ()
     
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Start Angle")) {
-                    HStack(alignment: .center) {
-                        Text("\(Int(circleState.startAngle))º")
-                        Slider(value: $circleState.startAngle, in: 0...360, step: 1)
-                    }
-                }
                 Section(header: Text("Start Angle")) {
                     ZStack(alignment: .center) {
                         AnglePicker(angle: $store.selection, strokeWidth: 20)
