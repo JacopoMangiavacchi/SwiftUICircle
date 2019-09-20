@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C305F0062334B22E008AAF14 /* ColorPicker in Frameworks */ = {isa = PBXBuildFile; productRef = C305F0052334B22E008AAF14 /* ColorPicker */; };
+		C305F00823351EE4008AAF14 /* AnglePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C305F00723351EE4008AAF14 /* AnglePicker.swift */; };
 		C3A38789232FFEBB004EC7B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A38788232FFEBB004EC7B0 /* AppDelegate.swift */; };
 		C3A3878B232FFEBB004EC7B0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A3878A232FFEBB004EC7B0 /* SceneDelegate.swift */; };
 		C3A3878D232FFEBB004EC7B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A3878C232FFEBB004EC7B0 /* ContentView.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C305F00723351EE4008AAF14 /* AnglePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnglePicker.swift; sourceTree = "<group>"; };
 		C3A38785232FFEBB004EC7B0 /* Circles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Circles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3A38788232FFEBB004EC7B0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3A3878A232FFEBB004EC7B0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				C3A38793232FFEBC004EC7B0 /* LaunchScreen.storyboard */,
 				C3A38796232FFEBC004EC7B0 /* Info.plist */,
 				C3A38790232FFEBC004EC7B0 /* Preview Content */,
+				C305F00723351EE4008AAF14 /* AnglePicker.swift */,
 			);
 			path = Circles;
 			sourceTree = "<group>";
@@ -155,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3A38789232FFEBB004EC7B0 /* AppDelegate.swift in Sources */,
+				C305F00823351EE4008AAF14 /* AnglePicker.swift in Sources */,
 				C3A3878B232FFEBB004EC7B0 /* SceneDelegate.swift in Sources */,
 				C3A3878D232FFEBB004EC7B0 /* ContentView.swift in Sources */,
 			);

@@ -247,6 +247,7 @@ struct CircleShape: Shape {
 
 struct TimeDetailView: View {
     @Binding var circleState: CircleState
+    @State var angle = Angle()
     let onDismiss: () -> ()
     
     var body: some View {
@@ -256,6 +257,13 @@ struct TimeDetailView: View {
                     HStack(alignment: .center) {
                         Text("\(Int(circleState.startAngle))º")
                         Slider(value: $circleState.startAngle, in: 0...360, step: 1)
+                    }
+                }
+                Section(header: Text("Angle")) {
+                    Text("Angle: \(Int(circleState.startAngle))º")
+                    VStack(alignment: .center) {
+                        AnglePicker(angle: $angle, strokeWidth: 20)
+                            .frame(width: 100, height: 100, alignment: .center)
                     }
                 }
                 Section(header: Text("Animation")) {
@@ -295,7 +303,7 @@ struct RowColDetailView: View {
                     Text("Color: \(data.color.description)")
                     VStack(alignment: .center) {
 //                        Text("Source of truth: \(String(describing: color))")
-                        ColorPicker(color: $color, strokeWidth: 10)
+                        ColorPicker(color: $color, strokeWidth: 20)
                             .frame(width: 100, height: 100, alignment: .center)
                     }
                 }
