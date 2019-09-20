@@ -16,9 +16,9 @@ struct CircleRowColData {
 }
 
 struct CircleState {
-    var repeatForever: Bool = true
+    var repeatForever: Bool = false
     var animationTime = 10.0
-    var startAngle = 90
+    var startAngle = 90.0
     var rows:[CircleRowColData] = {
         var array = [CircleRowColData]()
         for i in 0..<8 {
@@ -146,15 +146,12 @@ struct CircleView: View {
     func modal(detail: CircleType) -> some View {
         Group {
             if detail == .time {
-                TimeDetailView() {
-                    self.circleState.animationTime = 20
-                    self.circleState.startAngle = 0
+                TimeDetailView(circleState: $circleState) {
                     self.detail = nil
                 }
             }
             if detail == .rowcol {
                 RowColDetailView() {
-                    self.circleState.rows.removeLast()
                     self.detail = nil
                 }
             }
@@ -191,13 +188,14 @@ struct CircleShape: Shape {
     let x_cos: [Double]
     let y_sin: [Double]
     
-    init(pct: Double, startAngle: Int, xSpeed: Int, ySpeed: Int) {
+    init(pct: Double, startAngle: Double, xSpeed: Int, ySpeed: Int) {
         self.pct = pct
         self.xSpeed = xSpeed
         self.ySpeed = ySpeed
-        self.startAngle = startAngle
-        self.x_cos = (0..<360).map {1.0 + cos(Double(($0 - startAngle) % 360) * Double.pi/180)}
-        self.y_sin = (0..<360).map {1.0 + sin(Double(($0 - startAngle) % 360) * Double.pi/180)}
+        let iStartAngle = Int(startAngle)
+        self.startAngle = iStartAngle
+        self.x_cos = (0..<360).map {1.0 + cos(Double(($0 - iStartAngle) % 360) * Double.pi/180)}
+        self.y_sin = (0..<360).map {1.0 + sin(Double(($0 - iStartAngle) % 360) * Double.pi/180)}
     }
 
     func drawFigure(scaleX: Double, scaleY: Double) -> Path {
@@ -233,15 +231,34 @@ struct CircleShape: Shape {
 }
 
 struct TimeDetailView: View {
+    @Binding var circleState: CircleState
     var onDismiss: () -> ()
     
     var body: some View {
-        VStack {
-            Text("Time")
-            Divider()
-            Button(action: { self.onDismiss() }) {
-                Text("Dismiss")
+        NavigationView {
+            Form {
+                Section(header: Text("Start Angle")) {
+                    HStack(alignment: .center) {
+                        Text("\(Int(circleState.startAngle))º")
+                        Slider(value: $circleState.startAngle, in: 0...360, step: 1)
+                    }
+                }
+                Section(header: Text("Animation")) {
+                    Stepper(value: $circleState.animationTime, in: 1...60, label: {
+                        Text("Time: \(Int(circleState.animationTime)) sec.")
+                        
+                    })
+                    Toggle(isOn: $circleState.repeatForever) {
+                        Text("Repeat Forever")
+                    }
+                }
+                Section {
+                    Button(action: { self.onDismiss() }) {
+                        Text("Return")
+                    }
+                }
             }
+            .navigationBarTitle(Text("Settings"))
         }
     }
 }
