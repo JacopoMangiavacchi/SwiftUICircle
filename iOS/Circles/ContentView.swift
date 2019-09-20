@@ -15,20 +15,14 @@ struct CircleRowColData {
     let color: UIColor
 }
 
-struct DetailView: View {
-    var onDismiss: () -> ()
-    
-    var body: some View {
-        Button(action: { self.onDismiss() }) {
-            Text("Dismiss")
-        }
-    }
+enum CircleType {
+    case time, rowcol, figure
 }
 
 struct ContentView: View {
     @State var pct: Double = 0.0
+    @State var repeatForever: Bool = true
     @State var animationTime = 10.0
-    @State var modalDisplayed = false
     @State var startAngle = 90
     @State var rows:[CircleRowColData] = {
         var array = [CircleRowColData]()
@@ -39,7 +33,7 @@ struct ContentView: View {
     }()
     @State var columns:[CircleRowColData] = {
         var array = [CircleRowColData]()
-        for i in 0..<8 {
+        for i in 0..<3 {
             array.append(CircleRowColData(speed: i + 1, color: colors[i % colors.count]))
         }
         return array
@@ -54,7 +48,7 @@ struct ContentView: View {
                     ForEach((0...self.rows.count), id: \.self) { r in
                         Group {
                             if r == 0 && c == 0 {
-                                CircleView(modalDisplayed: self.$modalDisplayed,
+                                CircleView(type: .time,
                                            pct: self.pct,
                                            startAngle: self.startAngle,
                                            text: "10s",
@@ -62,7 +56,7 @@ struct ContentView: View {
                                            col: CircleRowColData(speed: 1, color: UIColor.white))
                             }
                             else if r == 0 {
-                                CircleView(modalDisplayed: self.$modalDisplayed,
+                                CircleView(type: .rowcol,
                                            pct: self.pct,
                                            startAngle: self.startAngle,
                                            text: "\(c)x",
@@ -70,7 +64,7 @@ struct ContentView: View {
                                            col: self.columns[c - 1])
                             }
                             else if c == 0 {
-                                CircleView(modalDisplayed: self.$modalDisplayed,
+                                CircleView(type: .rowcol,
                                            pct: self.pct,
                                            startAngle: self.startAngle,
                                            text: "\(r)x",
@@ -78,7 +72,7 @@ struct ContentView: View {
                                            col: self.rows[r - 1])
                             }
                             else {
-                                CircleView(modalDisplayed: self.$modalDisplayed,
+                                CircleView(type: .figure,
                                            pct: self.pct,
                                            startAngle: self.startAngle,
                                            text: "",
@@ -92,24 +86,40 @@ struct ContentView: View {
         }
         .padding()
         .onAppear() {
-            withAnimation(Animation.linear(duration: self.animationTime).repeatForever(autoreverses: false)) {
-                self.pct = 1.0
+            if self.repeatForever {
+                withAnimation(Animation.linear(duration: self.animationTime).repeatForever(autoreverses: false)) {
+                    self.pct = 1.0
+                }
+            }
+            else {
+                withAnimation(Animation.linear(duration: self.animationTime)) {
+                    self.pct = 1.0
+                }
             }
         }
     }
 }
 
 struct CircleView: View {
-    @Binding var modalDisplayed: Bool
+    let type: CircleType
     let pct: Double
     let startAngle: Int
     let text: String
     let row: CircleRowColData
     let col: CircleRowColData
     let color: Color
+    
+    struct ModalDetail: Identifiable {
+        var id: CircleType {
+            return type
+        }
+        
+        let type: CircleType
+    }
+    @State var detail: ModalDetail?
 
-    init(modalDisplayed: Binding<Bool>, pct: Double, startAngle: Int, text: String, row: CircleRowColData, col: CircleRowColData) {
-        self._modalDisplayed = modalDisplayed
+    init(type: CircleType, pct: Double, startAngle: Int, text: String, row: CircleRowColData, col: CircleRowColData) {
+        self.type = type
         self.pct = pct
         self.startAngle = startAngle
         self.text = text
@@ -129,17 +139,26 @@ struct CircleView: View {
         }
     }
     
+    func modal(detail: CircleType) -> some View {
+        Group {
+            DetailView(type: detail) {
+                self.detail = nil
+            }
+        }
+    }
+
     var body: some View {
-        Button(action: { self.modalDisplayed = true }) {
+        Button(action: {
+            self.detail = ModalDetail(type: self.type)
+            
+        }) {
             CircleShape(pct: pct, startAngle: self.startAngle, xSpeed: col.speed, ySpeed: row.speed)
                 .stroke(self.color, lineWidth: 2.0)
                 .padding(2)
                 .overlay(Text(text).foregroundColor(self.color))
-        }.sheet(isPresented: self.$modalDisplayed) {
-            DetailView(onDismiss: {
-                self.modalDisplayed = false
-            })
-        }
+        }.sheet(item: $detail, content: { detail in
+            self.modal(detail: detail.type)
+        })
         .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
         .aspectRatio(1, contentMode: ContentMode.fit)
     }
@@ -173,8 +192,10 @@ struct CircleShape: Shape {
                 p.addLine(to: CGPoint(x: x, y: y))
             }
             
-            p.addEllipse(in: CGRect(x: x, y: y, width: 5, height: 5))
-            p.addEllipse(in: CGRect(x: x, y: y, width: 10, height: 10))
+            if pct < 1.0 {
+                p.addEllipse(in: CGRect(x: x, y: y, width: 5, height: 5))
+                p.addEllipse(in: CGRect(x: x, y: y, width: 10, height: 10))
+            }
         }
     }
     
@@ -189,6 +210,31 @@ struct CircleShape: Shape {
     var animatableData: Double {
         get { return pct }
         set { pct = newValue }
+    }
+}
+
+struct DetailView: View {
+    let type: CircleType
+    var onDismiss: () -> ()
+    
+    var body: some View {
+        VStack {
+            Group {
+                if self.type == .time {
+                    Text("Time")
+                }
+                if self.type == .rowcol {
+                    Text("RowCol")
+                }
+                if self.type == .figure {
+                    Text("Figure")
+                }
+            }
+            Divider()
+            Button(action: { self.onDismiss() }) {
+                Text("Dismiss")
+            }
+        }
     }
 }
 
