@@ -38,7 +38,7 @@ struct CircleState {
     }()
     var columns:[CircleRowColData] = {
         var array = [CircleRowColData]()
-        for i in 0...7 {
+        for i in 0...6 {
             array.append(CircleRowColData(speed:i > 0 ? i : i + 1, color: colors[i % colors.count]))
         }
         return array
@@ -162,7 +162,7 @@ struct CircleView: View {
                 }
             }
             if detail == .rowcol {
-                RowColDetailView(circleState: $circleState) {
+                RowColDetailView(circleState: $circleState, row: row, col: col, data: row == 0 ? $circleState.columns[col] : $circleState.rows[row]) {
                     self.detail = nil
                 }
             }
@@ -246,7 +246,7 @@ struct CircleShape: Shape {
 
 struct TimeDetailView: View {
     @Binding var circleState: CircleState
-    var onDismiss: () -> ()
+    let onDismiss: () -> ()
     
     var body: some View {
         NavigationView {
@@ -263,7 +263,6 @@ struct TimeDetailView: View {
                     }
 //                    Stepper(value: $circleState.animationTime, in: 1...60, label: {
 //                        Text("Time: \(Int(circleState.animationTime)) sec.")
-//
 //                    })
                 }
                 Section {
@@ -279,15 +278,26 @@ struct TimeDetailView: View {
 
 struct RowColDetailView: View {
     @Binding var circleState: CircleState
-    var onDismiss: () -> ()
+    let row: Int
+    let col: Int
+    @Binding var data: CircleRowColData
+    let onDismiss: () -> ()
     
     var body: some View {
-        VStack {
-            Text("RowCol")
-            Divider()
-            Button(action: { self.onDismiss() }) {
-                Text("Dismiss")
+        NavigationView {
+            Form {
+                Section(header: Text("Details")) {
+//                    Stepper(value: $data.speed, in: 1...10, label: {
+                        Text("Speed: \(Int(data.speed))x")
+//                    })
+                }
+                Section {
+                    Button(action: { self.onDismiss() }) {
+                        Text("Return")
+                    }
+                }
             }
+            .navigationBarTitle(Text(row == 0 ? "Column \(col)" : "Row \(row)"))
         }
     }
 }
