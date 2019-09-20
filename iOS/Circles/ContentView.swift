@@ -141,8 +141,20 @@ struct CircleView: View {
     
     func modal(detail: CircleType) -> some View {
         Group {
-            DetailView(type: detail) {
-                self.detail = nil
+            if detail == .time {
+                TimeDetailView() {
+                    self.detail = nil
+                }
+            }
+            if detail == .rowcol {
+                RowColDetailView() {
+                    self.detail = nil
+                }
+            }
+            if detail == .figure {
+                FigureDetailView() {
+                    self.detail = nil
+                }
             }
         }
     }
@@ -213,23 +225,40 @@ struct CircleShape: Shape {
     }
 }
 
-struct DetailView: View {
-    let type: CircleType
+struct TimeDetailView: View {
     var onDismiss: () -> ()
     
     var body: some View {
         VStack {
-            Group {
-                if self.type == .time {
-                    Text("Time")
-                }
-                if self.type == .rowcol {
-                    Text("RowCol")
-                }
-                if self.type == .figure {
-                    Text("Figure")
-                }
+            Text("Time")
+            Divider()
+            Button(action: { self.onDismiss() }) {
+                Text("Dismiss")
             }
+        }
+    }
+}
+
+struct RowColDetailView: View {
+    var onDismiss: () -> ()
+    
+    var body: some View {
+        VStack {
+            Text("RowCol")
+            Divider()
+            Button(action: { self.onDismiss() }) {
+                Text("Dismiss")
+            }
+        }
+    }
+}
+
+struct FigureDetailView: View {
+    var onDismiss: () -> ()
+    
+    var body: some View {
+        VStack {
+            Text("Figure")
             Divider()
             Button(action: { self.onDismiss() }) {
                 Text("Dismiss")
