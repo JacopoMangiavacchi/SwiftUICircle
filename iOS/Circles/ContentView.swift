@@ -15,69 +15,73 @@ struct CircleRowColData {
     let color: UIColor
 }
 
-enum CircleType {
-    case time, rowcol, figure
-}
-
-struct ContentView: View {
-    @State var pct: Double = 0.0
-    @State var repeatForever: Bool = true
-    @State var animationTime = 10.0
-    @State var startAngle = 90
-    @State var rows:[CircleRowColData] = {
+struct CircleState {
+    var repeatForever: Bool = true
+    var animationTime = 10.0
+    var startAngle = 90
+    var rows:[CircleRowColData] = {
         var array = [CircleRowColData]()
         for i in 0..<8 {
             array.append(CircleRowColData(speed: i + 1, color: colors[i % colors.count]))
         }
         return array
     }()
-    @State var columns:[CircleRowColData] = {
+    var columns:[CircleRowColData] = {
         var array = [CircleRowColData]()
         for i in 0..<3 {
             array.append(CircleRowColData(speed: i + 1, color: colors[i % colors.count]))
         }
         return array
     }()
+}
+
+enum CircleType {
+    case time, rowcol, figure
+}
+
+struct ContentView: View {
+    @State var pct: Double = 0.0
+    @State var circleState = CircleState()
 
     var body: some View {
         HStack {
             // Columns
-            ForEach((0...self.columns.count), id: \.self) { c in
+            ForEach((0...self.circleState.columns.count), id: \.self) { c in
                 VStack {
                     // Rows
-                    ForEach((0...self.rows.count), id: \.self) { r in
+                    ForEach((0...self.circleState.rows.count), id: \.self) { r in
                         Group {
                             if r == 0 && c == 0 {
-                                CircleView(type: .time,
+                                CircleView(circleState: self.$circleState,
+                                           type: .time,
                                            pct: self.pct,
-                                           startAngle: self.startAngle,
-                                           text: "10s",
+                                           text: "\(Int(self.circleState.animationTime))s",
                                            row: CircleRowColData(speed: 1, color: UIColor.white),
                                            col: CircleRowColData(speed: 1, color: UIColor.white))
                             }
                             else if r == 0 {
-                                CircleView(type: .rowcol,
+                                CircleView(circleState: self.$circleState,
+                                           type: .rowcol,
                                            pct: self.pct,
-                                           startAngle: self.startAngle,
                                            text: "\(c)x",
-                                           row: self.columns[c - 1],
-                                           col: self.columns[c - 1])
+                                           row: self.circleState.columns[c - 1],
+                                           col: self.circleState.columns[c - 1])
                             }
                             else if c == 0 {
-                                CircleView(type: .rowcol,
+                                CircleView(circleState: self.$circleState,
+                                           type: .rowcol,
                                            pct: self.pct,
-                                           startAngle: self.startAngle,
                                            text: "\(r)x",
-                                           row: self.rows[r - 1],
-                                           col: self.rows[r - 1])
+                                           row: self.circleState.rows[r - 1],
+                                           col: self.circleState.rows[r - 1])
                             }
                             else {
-                                CircleView(type: .figure,
+                                CircleView(circleState: self.$circleState,
+                                           type: .figure,
                                            pct: self.pct,
-                                           startAngle: self.startAngle,
                                            text: "",
-                                           row: self.rows[r - 1],
-                                           col: self.columns[c - 1])
+                                           row: self.circleState.rows[r - 1],
+                                           col: self.circleState.columns[c - 1])
                             }
                         }
                     }
@@ -86,13 +90,13 @@ struct ContentView: View {
         }
         .padding()
         .onAppear() {
-            if self.repeatForever {
-                withAnimation(Animation.linear(duration: self.animationTime).repeatForever(autoreverses: false)) {
+            if self.circleState.repeatForever {
+                withAnimation(Animation.linear(duration: self.circleState.animationTime).repeatForever(autoreverses: false)) {
                     self.pct = 1.0
                 }
             }
             else {
-                withAnimation(Animation.linear(duration: self.animationTime)) {
+                withAnimation(Animation.linear(duration: self.circleState.animationTime)) {
                     self.pct = 1.0
                 }
             }
@@ -101,9 +105,9 @@ struct ContentView: View {
 }
 
 struct CircleView: View {
+    @Binding var circleState: CircleState
     let type: CircleType
     let pct: Double
-    let startAngle: Int
     let text: String
     let row: CircleRowColData
     let col: CircleRowColData
@@ -118,10 +122,10 @@ struct CircleView: View {
     }
     @State var detail: ModalDetail?
 
-    init(type: CircleType, pct: Double, startAngle: Int, text: String, row: CircleRowColData, col: CircleRowColData) {
+    init(circleState: Binding<CircleState>, type: CircleType, pct: Double, text: String, row: CircleRowColData, col: CircleRowColData) {
+        self._circleState = circleState
         self.type = type
         self.pct = pct
-        self.startAngle = startAngle
         self.text = text
         self.row = row
         self.col = col
@@ -143,11 +147,14 @@ struct CircleView: View {
         Group {
             if detail == .time {
                 TimeDetailView() {
+                    self.circleState.animationTime = 20
+                    self.circleState.startAngle = 0
                     self.detail = nil
                 }
             }
             if detail == .rowcol {
                 RowColDetailView() {
+                    self.circleState.rows.removeLast()
                     self.detail = nil
                 }
             }
@@ -164,7 +171,7 @@ struct CircleView: View {
             self.detail = ModalDetail(type: self.type)
             
         }) {
-            CircleShape(pct: pct, startAngle: self.startAngle, xSpeed: col.speed, ySpeed: row.speed)
+            CircleShape(pct: pct, startAngle: self.circleState.startAngle, xSpeed: col.speed, ySpeed: row.speed)
                 .stroke(self.color, lineWidth: 2.0)
                 .padding(2)
                 .overlay(Text(text).foregroundColor(self.color))
