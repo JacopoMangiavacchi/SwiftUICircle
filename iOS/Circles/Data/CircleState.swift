@@ -41,6 +41,7 @@ class CircleState: ObservableObject {
     
     var currentRow: Int? = nil
     var currentCol: Int? = nil
+    
     var currentRowColColor: Color {
         get {
             guard let col = currentCol, let row = currentRow, col == 0 || row == 0 else { return Color.white }
@@ -57,6 +58,25 @@ class CircleState: ObservableObject {
             }
             else {
                 columns[col].color = newColor
+            }
+        }
+    }
+    
+    var currentRowColSpeed: Int {
+        get {
+            guard let col = currentCol, let row = currentRow, col == 0 || row == 0 else { return 1 }
+            
+            return col == 0 ? rows[row].speed : columns[col].speed
+        }
+
+        set {
+            guard let col = currentCol, let row = currentRow, col == 0 || row == 0 else { return }
+
+            if col == 0 {
+                rows[row].speed = newValue
+            }
+            else {
+                columns[col].speed = newValue
             }
         }
     }

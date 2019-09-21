@@ -72,9 +72,9 @@ struct RowColDetailView: View {
         NavigationView {
             Form {
                 Section(header: Text("Details")) {
-//                    Stepper(value: $data.speed, in: 1...10, label: {
-//                        Text("Speed: \(Int(data.speed))x")
-//                    })
+                    Stepper(value: $circleState.currentRowColSpeed, in: 1...10, label: {
+                        Text("Speed: \(circleState.currentRowColSpeed)x")
+                    })
                     ColorPicker(color: $circleState.currentRowColColor, strokeWidth: 20)
                         .frame(width: 100, height: 100, alignment: .center)
                 }
