@@ -28,21 +28,27 @@ struct CircleView: View {
     @State var detail: ModalDetail?
 
     func presentModalSheet(detail: CircleType) -> some View {
-        Group {
+        circleState.currentCol = col
+        circleState.currentRow = row
+
+        return Group {
 //            if detail == .time {
 //                TimeDetailView() {
 //                    self.detail = nil
 //                }
+//                .environmentObject(circleState)
 //            }
             if detail == .rowcol {
-                RowColDetailView(row: row, col: col) {
+                RowColDetailView() {
                     self.detail = nil
                 }
+                .environmentObject(circleState)
             }
             if detail == .figure {
                 FigureDetailView() {
                     self.detail = nil
                 }
+                .environmentObject(circleState)
             }
         }
     }
@@ -91,4 +97,3 @@ struct CircleView: View {
         .aspectRatio(1, contentMode: ContentMode.fit)
     }
 }
-

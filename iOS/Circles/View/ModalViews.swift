@@ -63,33 +63,24 @@ import AnglePicker
 //    }
 //}
 
+
 struct RowColDetailView: View {
-    let row: Int
-    let col: Int
     @EnvironmentObject var circleState: CircleState
-    @State var color: Color = .blue
     let onDismiss: () -> ()
     
     var body: some View {
         NavigationView {
             Form {
-//                Section(header: Text("Details")) {
-////                    Stepper(value: $data.speed, in: 1...10, label: {
+                Section(header: Text("Details")) {
+//                    Stepper(value: $data.speed, in: 1...10, label: {
 //                        Text("Speed: \(Int(data.speed))x")
-////                    })
-//                    Text("Color: \(data.color.description)")
-//                    VStack(alignment: .center) {
-////                        Text("Source of truth: \(String(describing: color))")
-//                        ColorPicker(color: $color, strokeWidth: 20)
-//                            .frame(width: 100, height: 100, alignment: .center)
-//                            .onAppear() {
-//                                self.color = Color(self.data.color)
-//                            }
-//                    }
-//                }
+//                    })
+                    ColorPicker(color: $circleState.currentRowColColor, strokeWidth: 20)
+                        .frame(width: 100, height: 100, alignment: .center)
+                }
                 Section {
                     Button(action: {
-                        self.circleState.columns.remove(at: self.col)
+//                        self.circleState.columns.remove(at: self.col)
                         self.onDismiss()
                     }) {
                         Text("Delete").foregroundColor(.red)
@@ -101,12 +92,17 @@ struct RowColDetailView: View {
                     }
                 }
                 Section {
-                    Button(action: { self.onDismiss() }) {
+                    Button(action: {
+                        self.onDismiss()
+                    }) {
                         Text("Return")
                     }
                 }
             }
-            .navigationBarTitle(Text(row == 0 ? "Column \(col)" : "Row \(row)"))
+//            .onAppear() {
+//                self.color = self.getColor()
+//            }
+                .navigationBarTitle(Text(circleState.currentRow! == 0 ? "Column \(circleState.currentCol!) Settings" : "Row \(circleState.currentRow!) Settings"))
         }
     }
 }
