@@ -29,15 +29,28 @@ class CircleState: ObservableObject {
         }
         return array
     }
+    
+    static func getX_CosArray(angle: Int) -> [Double] {
+        (0..<360).map {1.0 + cos(Double(($0 - angle) % 360) * Double.pi/180)}
+    }
 
-    var animate: Bool
-    var animationTime: Double
-    @Published var startAngle: Double
+    static func getY_SinArray(angle: Int) -> [Double] {
+        (0..<360).map {1.0 + sin(Double(($0 - angle) % 360) * Double.pi/180)}
+    }
+
+    @Published var animate: Bool
+    @Published var animationTime: Double
+    @Published var startAngle: Angle {
+        didSet {
+            self.x_cos = CircleState.getX_CosArray(angle: Int(startAngle.degrees))
+            self.y_sin = CircleState.getY_SinArray(angle: Int(startAngle.degrees))
+        }
+    }
     @Published var rows:[CircleRowColData]
     @Published var columns:[CircleRowColData]
     
-    var x_cos: [Double]
-    var y_sin: [Double]
+    @Published var x_cos: [Double]
+    @Published var y_sin: [Double]
     
     var currentRow: Int? = nil
     var currentCol: Int? = nil
@@ -81,12 +94,12 @@ class CircleState: ObservableObject {
         }
     }
     
-    init(animate: Bool = false, animationTime: Double = 10.0, startAngle: Double = 90.0, rows: [CircleRowColData]? = nil, columns: [CircleRowColData]? = nil) {
+    init(animate: Bool = false, animationTime: Double = 10.0, startAngle: Angle = Angle(degrees: 90.0), rows: [CircleRowColData]? = nil, columns: [CircleRowColData]? = nil) {
         self.animate = animate
         self.animationTime = animationTime
         self.startAngle = startAngle
-        self.x_cos = (0..<360).map {1.0 + cos(Double(($0 - Int(startAngle)) % 360) * Double.pi/180)}
-        self.y_sin = (0..<360).map {1.0 + sin(Double(($0 - Int(startAngle)) % 360) * Double.pi/180)}
+        self.x_cos = CircleState.getX_CosArray(angle: Int(startAngle.degrees))
+        self.y_sin = CircleState.getY_SinArray(angle: Int(startAngle.degrees))
         self.rows = rows ?? CircleState.createDefaultRowCol(count: 7)
         self.columns = columns ?? CircleState.createDefaultRowCol(count: 3)
     }

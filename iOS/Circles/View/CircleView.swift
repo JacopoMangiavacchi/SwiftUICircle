@@ -32,12 +32,12 @@ struct CircleView: View {
         circleState.currentRow = row
 
         return Group {
-//            if detail == .time {
-//                TimeDetailView() {
-//                    self.detail = nil
-//                }
-//                .environmentObject(circleState)
-//            }
+            if detail == .time {
+                TimeDetailView() {
+                    self.detail = nil
+                }
+                .environmentObject(circleState)
+            }
             if detail == .rowcol {
                 RowColDetailView() {
                     self.detail = nil

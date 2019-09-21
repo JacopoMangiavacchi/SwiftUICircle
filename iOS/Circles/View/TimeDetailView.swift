@@ -11,54 +11,36 @@ import Combine
 import AnglePicker
 
 
-//final class AngleStore: ObservableObject {
-//    @Binding var circleState: CircleState
-//
-//    init(circleState: Binding<CircleState>) {
-//        self._circleState = circleState
-//    }
-//
-//    @Published var selection: Angle = Angle() {
-//        didSet {
-//            circleState.startAngle = selection.degrees
-//        }
-//    }
-//}
+struct TimeDetailView: View {
+    @EnvironmentObject var circleState: CircleState
+    let onDismiss: () -> ()
 
-//struct TimeDetailView: View {
-//    @Binding var circleState: CircleState
-//    @ObservedObject var store: AngleStore
-//    let onDismiss: () -> ()
-//
-//    var body: some View {
-//        NavigationView {
-//            Form {
-//                Section(header: Text("Start Angle")) {
-//                    ZStack(alignment: .center) {
-//                        AnglePicker(angle: $store.selection, strokeWidth: 20)
-//                            .frame(width: 100, height: 100, alignment: .center)
-//                            .onAppear() {
-//                                self.store.selection.degrees = self.circleState.startAngle
-//                            }
-//                        Text("\(Int(store.selection.degrees))º")
-//                    }
-//                }
-//                Section(header: Text("Animation")) {
-//                    Toggle(isOn: $circleState.animate) {
-//                        Text("Animate")
-//                    }
-////                    Stepper(value: $circleState.animationTime, in: 1...60, label: {
-////                        Text("Time: \(Int(circleState.animationTime)) sec.")
-////                    })
-//                }
-//                Section {
-//                    Button(action: { self.onDismiss() }) {
-//                        Text("Return")
-//                    }
-//                }
-//            }
-//            .navigationBarTitle(Text("Settings"))
-//        }
-//    }
-//}
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Start Angle")) {
+                    ZStack(alignment: .center) {
+                        AnglePicker(angle: $circleState.startAngle, strokeWidth: 20)
+                            .frame(width: 100, height: 100, alignment: .center)
+                        Text("\(Int(circleState.startAngle.degrees))º")
+                    }
+                }
+                Section(header: Text("Animation")) {
+                    Toggle(isOn: $circleState.animate) {
+                        Text("Animate")
+                    }
+                    Stepper(value: $circleState.animationTime, in: 1...60, label: {
+                        Text("Time: \(Int(circleState.animationTime)) sec.")
+                    })
+                }
+                Section {
+                    Button(action: { self.onDismiss() }) {
+                        Text("Return")
+                    }
+                }
+            }
+            .navigationBarTitle(Text("Settings"))
+        }
+    }
+}
 
