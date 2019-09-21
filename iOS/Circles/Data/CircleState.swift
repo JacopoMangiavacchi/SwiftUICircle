@@ -87,10 +87,9 @@ class CircleState: ObservableObject {
         self.startAngle = startAngle
         self.x_cos = (0..<360).map {1.0 + cos(Double(($0 - Int(startAngle)) % 360) * Double.pi/180)}
         self.y_sin = (0..<360).map {1.0 + sin(Double(($0 - Int(startAngle)) % 360) * Double.pi/180)}
-        self.rows = rows ?? CircleState.createDefaultRowCol(count: 8)
-        self.columns = columns ?? CircleState.createDefaultRowCol(count: 8)
+        self.rows = rows ?? CircleState.createDefaultRowCol(count: 7)
+        self.columns = columns ?? CircleState.createDefaultRowCol(count: 3)
     }
-    
 }
 
 

@@ -11,8 +11,10 @@
 		C305F00B23354C91008AAF14 /* AnglePicker in Frameworks */ = {isa = PBXBuildFile; productRef = C305F00A23354C91008AAF14 /* AnglePicker */; };
 		C37D0BBC23359D3D007798F4 /* CircleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D0BBB23359D3D007798F4 /* CircleState.swift */; };
 		C37D0BBE23368113007798F4 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D0BBD23368113007798F4 /* CircleView.swift */; };
-		C37D0BC023368135007798F4 /* ModalViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D0BBF23368135007798F4 /* ModalViews.swift */; };
+		C37D0BC023368135007798F4 /* TimeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D0BBF23368135007798F4 /* TimeDetailView.swift */; };
 		C37D0BC223368181007798F4 /* CircleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D0BC123368181007798F4 /* CircleShape.swift */; };
+		C37D0BC42336BED3007798F4 /* RowColDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D0BC32336BED3007798F4 /* RowColDetailView.swift */; };
+		C37D0BC62336BF1E007798F4 /* FigureDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D0BC52336BF1E007798F4 /* FigureDetailView.swift */; };
 		C3A38789232FFEBB004EC7B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A38788232FFEBB004EC7B0 /* AppDelegate.swift */; };
 		C3A3878B232FFEBB004EC7B0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A3878A232FFEBB004EC7B0 /* SceneDelegate.swift */; };
 		C3A3878D232FFEBB004EC7B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A3878C232FFEBB004EC7B0 /* ContentView.swift */; };
@@ -24,8 +26,10 @@
 /* Begin PBXFileReference section */
 		C37D0BBB23359D3D007798F4 /* CircleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleState.swift; sourceTree = "<group>"; };
 		C37D0BBD23368113007798F4 /* CircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
-		C37D0BBF23368135007798F4 /* ModalViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViews.swift; sourceTree = "<group>"; };
+		C37D0BBF23368135007798F4 /* TimeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDetailView.swift; sourceTree = "<group>"; };
 		C37D0BC123368181007798F4 /* CircleShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleShape.swift; sourceTree = "<group>"; };
+		C37D0BC32336BED3007798F4 /* RowColDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowColDetailView.swift; sourceTree = "<group>"; };
+		C37D0BC52336BF1E007798F4 /* FigureDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FigureDetailView.swift; sourceTree = "<group>"; };
 		C3A38785232FFEBB004EC7B0 /* Circles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Circles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3A38788232FFEBB004EC7B0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3A3878A232FFEBB004EC7B0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,7 +76,9 @@
 				C3A3878C232FFEBB004EC7B0 /* ContentView.swift */,
 				C37D0BBD23368113007798F4 /* CircleView.swift */,
 				C37D0BC123368181007798F4 /* CircleShape.swift */,
-				C37D0BBF23368135007798F4 /* ModalViews.swift */,
+				C37D0BBF23368135007798F4 /* TimeDetailView.swift */,
+				C37D0BC32336BED3007798F4 /* RowColDetailView.swift */,
+				C37D0BC52336BF1E007798F4 /* FigureDetailView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -202,11 +208,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C37D0BC62336BF1E007798F4 /* FigureDetailView.swift in Sources */,
 				C3A38789232FFEBB004EC7B0 /* AppDelegate.swift in Sources */,
 				C37D0BBE23368113007798F4 /* CircleView.swift in Sources */,
-				C37D0BC023368135007798F4 /* ModalViews.swift in Sources */,
+				C37D0BC023368135007798F4 /* TimeDetailView.swift in Sources */,
 				C37D0BC223368181007798F4 /* CircleShape.swift in Sources */,
 				C3A3878B232FFEBB004EC7B0 /* SceneDelegate.swift in Sources */,
+				C37D0BC42336BED3007798F4 /* RowColDetailView.swift in Sources */,
 				C3A3878D232FFEBB004EC7B0 /* ContentView.swift in Sources */,
 				C37D0BBC23359D3D007798F4 /* CircleState.swift in Sources */,
 			);

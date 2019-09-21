@@ -54,6 +54,13 @@ struct CircleView: View {
     }
     
     func circleShapeWrapper() -> some View {
+        guard row < circleState.rows.count, col < circleState.columns.count else {
+            return CircleShape(pct: 0, circleState: circleState, speed: (1, 1))
+                    .stroke(Color.white, lineWidth: 2.0)
+                    .padding(2)
+                    .overlay(Text(text).foregroundColor(.white))
+        }
+        
         var rowData = circleState.rows[row]
         var colData = circleState.columns[col]
         var color = Color.white
