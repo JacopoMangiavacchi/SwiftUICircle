@@ -59,13 +59,16 @@ struct ContentView: View {
             }
         }
         .padding()
+        .onDisappear() {
+            print("disappear")
+        }
         .onAppear() {
-            withAnimation(Animation.linear(duration: self.circleState.animationTime).repeatForever(autoreverses: false)) {
-                self.pct = 1.0
+            print("appear")
+            if self.circleState.animate {
+                withAnimation(Animation.linear(duration: self.circleState.animationTime).repeatForever(autoreverses: false)) {
+                    self.pct = 1.0
+                }
             }
-//            if !self.circleState.animate {
-//                self.pct = 0.0
-//            }
         }
     }
 }

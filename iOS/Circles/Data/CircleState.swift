@@ -94,7 +94,7 @@ class CircleState: ObservableObject {
         }
     }
     
-    init(animate: Bool = false, animationTime: Double = 10.0, startAngle: Angle = Angle(degrees: 90.0), rows: [CircleRowColData]? = nil, columns: [CircleRowColData]? = nil) {
+    init(animate: Bool = true, animationTime: Double = 10.0, startAngle: Angle = Angle(degrees: 90.0), rows: [CircleRowColData]? = nil, columns: [CircleRowColData]? = nil) {
         self.animate = animate
         self.animationTime = animationTime
         self.startAngle = startAngle

@@ -17,14 +17,16 @@ struct RowColDetailView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Details")) {
+                Section(header: Text("Speed")) {
                     Stepper(value: $circleState.currentRowColSpeed, in: 1...10, label: {
                         Text("Speed: \(circleState.currentRowColSpeed)x")
                     })
-                    ColorPicker(color: $circleState.currentRowColColor, strokeWidth: 20)
-                        .frame(width: 100, height: 100, alignment: .center)
                 }
-                Section {
+                Section(header: Text("Color")) {
+                    ColorPicker(color: $circleState.currentRowColColor, strokeWidth: 30)
+                        .frame(width: 200, height: 200, alignment: .center)
+                }
+                Section(header: Text("Actions")) {
                     Button(action: {
                         self.deleteRowCol()
                         self.onDismiss()

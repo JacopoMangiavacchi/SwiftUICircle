@@ -20,8 +20,8 @@ struct TimeDetailView: View {
             Form {
                 Section(header: Text("Start Angle")) {
                     ZStack(alignment: .center) {
-                        AnglePicker(angle: $circleState.startAngle, strokeWidth: 20)
-                            .frame(width: 100, height: 100, alignment: .center)
+                        AnglePicker(angle: $circleState.startAngle, strokeWidth: 30)
+                            .frame(width: 200, height: 200, alignment: .center)
                         Text("\(Int(circleState.startAngle.degrees))º")
                     }
                 }
