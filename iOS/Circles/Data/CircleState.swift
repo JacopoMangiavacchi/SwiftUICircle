@@ -81,7 +81,7 @@ class CircleState: ObservableObject {
         (0..<360).map {1.0 + sin(Double(($0 - angle) % 360) * Double.pi/180)}
     }
 
-    @Published(key: "animate") var animate: Bool = true
+    @Published(key: "animate") var animate: Bool = false
     @Published(key: "animationTime") var animationTime: Double = 10.0
     @Published(key: "startAngle") var savedStartAngle: Double = 90
     @Published var startAngle: Angle {
@@ -102,7 +102,7 @@ class CircleState: ObservableObject {
     
     var currentRowColColor: Color {
         get {
-            guard let col = currentCol, let row = currentRow, col == 0 || row == 0 else { return Color.white }
+            guard let col = currentCol, let row = currentRow, (col == 0 || row == 0) && row < rows.count && col < columns.count else { return Color.white }
             
             return Color(col == 0 ? rows[row].color.color : columns[col].color.color)
         }
@@ -122,7 +122,7 @@ class CircleState: ObservableObject {
     
     var currentRowColSpeed: Int {
         get {
-            guard let col = currentCol, let row = currentRow, col == 0 || row == 0 else { return 1 }
+            guard let col = currentCol, let row = currentRow, (col == 0 || row == 0) && row < rows.count && col < columns.count else { return 1 }
             
             return col == 0 ? rows[row].speed : columns[col].speed
         }
@@ -154,6 +154,44 @@ class CircleState: ObservableObject {
         self.startAngle = Angle(degrees: savedStartAngle)
         self.x_cos = CircleState.getX_CosArray(angle: Int(startAngle.degrees))
         self.y_sin = CircleState.getY_SinArray(angle: Int(startAngle.degrees))
+    }
+    
+    func resetAllRowsCols() {
+        self.rows = CircleState.createDefaultRowCol(count: 7)
+        self.columns = CircleState.createDefaultRowCol(count: 3)
+    }
+    
+    func canDeleteCurrentRowCol() -> Bool {
+        guard let col = self.currentCol, let row = self.currentRow, col == 0 || row == 0 else { return false }
+
+        if col == 0 {
+            return self.rows.count > 2
+        }
+        else {
+            return self.columns.count > 2
+        }
+    }
+    
+    func deleteCurrentRowCol() {
+        guard let col = self.currentCol, let row = self.currentRow, col == 0 || row == 0 else { return }
+
+        if col == 0 {
+            self.rows.remove(at: row)
+        }
+        else {
+            self.columns.remove(at: col)
+        }
+    }
+
+    func duplicateCurrentRowCol() {
+        guard let col = self.currentCol, let row = self.currentRow, col == 0 || row == 0 else { return }
+
+        if col == 0 {
+            self.rows.insert(self.rows[row], at: row)
+        }
+        else {
+            self.columns.insert(self.columns[col], at: col)
+        }
     }
 }
 

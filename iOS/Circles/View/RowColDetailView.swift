@@ -27,14 +27,16 @@ struct RowColDetailView: View {
                         .frame(width: 200, height: 200, alignment: .center)
                 }
                 Section(header: Text("Actions")) {
-                    Button(action: {
-                        self.deleteRowCol()
-                        self.onDismiss()
-                    }) {
-                        Text("Delete").foregroundColor(.red)
+                    if self.circleState.canDeleteCurrentRowCol() {
+                        Button(action: {
+                            self.circleState.deleteCurrentRowCol()
+                            self.onDismiss()
+                        }) {
+                            Text("Delete").foregroundColor(.red)
+                        }
                     }
                     Button(action: {
-                        self.duplicateRowCol()
+                        self.circleState.duplicateCurrentRowCol()
                         self.onDismiss()
                     }) {
                         Text("Duplicate").foregroundColor(.green)
@@ -49,28 +51,6 @@ struct RowColDetailView: View {
                 }
             }
             .navigationBarTitle(Text(circleState.currentRow! == 0 ? "Column \(circleState.currentCol!) Settings" : "Row \(circleState.currentRow!) Settings"))
-        }
-    }
-    
-    func deleteRowCol() {
-        guard let col = circleState.currentCol, let row = circleState.currentRow, col == 0 || row == 0 else { return }
-
-        if col == 0 {
-            circleState.rows.remove(at: row)
-        }
-        else {
-            circleState.columns.remove(at: col)
-        }
-    }
-
-    func duplicateRowCol() {
-        guard let col = circleState.currentCol, let row = circleState.currentRow, col == 0 || row == 0 else { return }
-
-        if col == 0 {
-            circleState.rows.insert(circleState.rows[row], at: row)
-        }
-        else {
-            circleState.columns.insert(circleState.columns[col], at: col)
         }
     }
 }

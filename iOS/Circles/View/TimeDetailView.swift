@@ -33,6 +33,14 @@ struct TimeDetailView: View {
                         Text("Time: \(Int(circleState.animationTime)) sec.")
                     })
                 }
+                Section(header: Text("Actions")) {
+                    Button(action: {
+                        self.circleState.resetAllRowsCols()
+                        self.onDismiss()
+                    }) {
+                        Text("Reset All Rows Columns").foregroundColor(.red)
+                    }
+                }
                 Section {
                     Button(action: { self.onDismiss() }) {
                         Text("Return")
