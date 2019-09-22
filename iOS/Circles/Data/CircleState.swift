@@ -99,6 +99,19 @@ class CircleState: ObservableObject {
     
     var currentRow: Int? = nil
     var currentCol: Int? = nil
+
+    var currentColor: Color {
+        get {
+            guard let col = currentCol, let row = currentRow, col > 0 && row > 0 && row < rows.count && col < columns.count else { return Color.white }
+            
+            let comp1 = rows[row].color.color.cgColor.components!
+            let comp2 = columns[col].color.color.cgColor.components!
+
+            return Color(red: Double(comp1[0] + comp2[0]) / 2.0,
+                        green: Double(comp1[1] + comp2[1]) / 2.0,
+                         blue: Double(comp1[2] + comp2[2]) / 2.0)
+        }
+    }
     
     var currentRowColColor: Color {
         get {
@@ -120,6 +133,14 @@ class CircleState: ObservableObject {
         }
     }
     
+    var currentSpeed: (Int, Int) {
+        get {
+            guard let col = currentCol, let row = currentRow, col > 0 && row > 0 && row < rows.count && col < columns.count else { return (1, 1) }
+            
+            return (rows[row].speed, columns[col].speed)
+        }
+    }
+
     var currentRowColSpeed: Int {
         get {
             guard let col = currentCol, let row = currentRow, (col == 0 || row == 0) && row < rows.count && col < columns.count else { return 1 }

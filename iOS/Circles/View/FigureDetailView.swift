@@ -16,16 +16,16 @@ struct FigureDetailView: View {
     
     var body: some View {
         VStack {
-            CircleView(pct: self.$pct,
-                       type: .figure,
-                       text: "",
-                       row: circleState.currentRow!,
-                       col: circleState.currentCol!)
-            .onAppear() {
-                withAnimation(Animation.linear(duration: self.circleState.animationTime).repeatForever(autoreverses: false)) {
-                    self.pct = 1.0
+            CircleShape(pct: self.pct, circleState: circleState, speed: circleState.currentSpeed)
+                .stroke(self.circleState.currentColor, lineWidth: 4.0)
+                .padding(10)
+                .frame(minWidth: 1, maxWidth: .infinity, minHeight: 1, maxHeight: .infinity)
+                .aspectRatio(1, contentMode: ContentMode.fit)
+                .onAppear() {
+                    withAnimation(Animation.linear(duration: self.circleState.animationTime).repeatForever(autoreverses: false)) {
+                        self.pct = 1.0
+                    }
                 }
-            }
 
             Button(action: { self.onDismiss() }) {
                 Text("Dismiss")
