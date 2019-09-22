@@ -68,16 +68,16 @@ struct CircleView: View {
         if col == 0 {
             rowData = circleState.rows[row]
             colData = circleState.rows[row]
-            color = Color(circleState.rows[row].color)
+            color = Color(circleState.rows[row].color.color)
         }
         else if row == 0 {
             rowData = circleState.columns[col]
             colData = circleState.columns[col]
-            color = Color(circleState.columns[col].color)
+            color = Color(circleState.columns[col].color.color)
         }
         else {
-            let comp1 = rowData.color.cgColor.components!
-            let comp2 = colData.color.cgColor.components!
+            let comp1 = rowData.color.color.cgColor.components!
+            let comp2 = colData.color.color.cgColor.components!
 
             color = Color(red: Double(comp1[0] + comp2[0]) / 2.0,
                         green: Double(comp1[1] + comp2[1]) / 2.0,

@@ -15,9 +15,52 @@ enum CircleType {
     case time, rowcol, figure
 }
 
-struct CircleRowColData {
+class ColorCodable: Codable {
+    var red: CGFloat = 0.0
+    var green: CGFloat = 0.0
+    var blue: CGFloat = 0.0
+    var alpha: CGFloat = 0.0
+    
+    init(color:UIColor) {
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+    }
+
+    var color:UIColor{
+        get{
+            return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        }
+        set{
+            newValue.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        }
+    }
+}
+
+struct CircleRowColData: Codable {
     var speed: Int
-    var color: UIColor
+    var color: ColorCodable
+}
+
+private var cancellables = [String:AnyCancellable]()
+
+extension Published where Value : Codable {
+    init(wrappedValue defaultValue: Value, key: String) {
+        var value = defaultValue
+        
+        if let savedData = UserDefaults.standard.object(forKey: key) as? Data {
+            let decoder = JSONDecoder()
+            if let loadedData = try? decoder.decode(Value.self, from: savedData) {
+                value = loadedData
+            }
+        }
+        self.init(initialValue: value)
+
+        cancellables[key] = projectedValue.sink { val in
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(val) {
+                UserDefaults.standard.set(encoded, forKey: key)
+            }
+        }
+    }
 }
 
 class CircleState: ObservableObject {
@@ -25,7 +68,7 @@ class CircleState: ObservableObject {
     static func createDefaultRowCol(count: Int) -> [CircleRowColData] {
         var array = [CircleRowColData]()
         for i in 0...count {
-            array.append(CircleRowColData(speed: i > 0 ? i : i + 1, color: colors[i % colors.count]))
+            array.append(CircleRowColData(speed: i > 0 ? i : i + 1, color: ColorCodable(color: colors[i % colors.count])))
         }
         return array
     }
@@ -38,16 +81,18 @@ class CircleState: ObservableObject {
         (0..<360).map {1.0 + sin(Double(($0 - angle) % 360) * Double.pi/180)}
     }
 
-    @Published var animate: Bool
-    @Published var animationTime: Double
+    @Published(key: "animate") var animate: Bool = true
+    @Published(key: "animationTime") var animationTime: Double = 10.0
+    @Published(key: "startAngle") var savedStartAngle: Double = 90
     @Published var startAngle: Angle {
         didSet {
+            self.savedStartAngle = startAngle.degrees
             self.x_cos = CircleState.getX_CosArray(angle: Int(startAngle.degrees))
             self.y_sin = CircleState.getY_SinArray(angle: Int(startAngle.degrees))
         }
     }
-    @Published var rows:[CircleRowColData]
-    @Published var columns:[CircleRowColData]
+    @Published(key: "rows") var rows:[CircleRowColData] = []
+    @Published(key: "columns") var columns:[CircleRowColData] = []
     
     @Published var x_cos: [Double]
     @Published var y_sin: [Double]
@@ -59,7 +104,7 @@ class CircleState: ObservableObject {
         get {
             guard let col = currentCol, let row = currentRow, col == 0 || row == 0 else { return Color.white }
             
-            return Color(col == 0 ? rows[row].color : columns[col].color)
+            return Color(col == 0 ? rows[row].color.color : columns[col].color.color)
         }
 
         set {
@@ -67,10 +112,10 @@ class CircleState: ObservableObject {
 
             let newColor = UIColor(hex: newValue.description) ?? UIColor.white
             if col == 0 {
-                rows[row].color = newColor
+                rows[row].color = ColorCodable(color: newColor)
             }
             else {
-                columns[col].color = newColor
+                columns[col].color = ColorCodable(color: newColor)
             }
         }
     }
@@ -94,14 +139,21 @@ class CircleState: ObservableObject {
         }
     }
     
-    init(animate: Bool = true, animationTime: Double = 10.0, startAngle: Angle = Angle(degrees: 90.0), rows: [CircleRowColData]? = nil, columns: [CircleRowColData]? = nil) {
-        self.animate = animate
-        self.animationTime = animationTime
-        self.startAngle = startAngle
+    init() {
+        self.x_cos = CircleState.getX_CosArray(angle: 0)
+        self.y_sin = CircleState.getY_SinArray(angle: 0)
+        self.startAngle = Angle(degrees: 0)
+
+        if self.rows.count == 0 {
+            self.rows = CircleState.createDefaultRowCol(count: 7)
+        }
+        if self.columns.count == 0 {
+            self.columns = CircleState.createDefaultRowCol(count: 3)
+        }
+        
+        self.startAngle = Angle(degrees: savedStartAngle)
         self.x_cos = CircleState.getX_CosArray(angle: Int(startAngle.degrees))
         self.y_sin = CircleState.getY_SinArray(angle: Int(startAngle.degrees))
-        self.rows = rows ?? CircleState.createDefaultRowCol(count: 7)
-        self.columns = columns ?? CircleState.createDefaultRowCol(count: 3)
     }
 }
 
