@@ -21,6 +21,7 @@
 		C3A3878F232FFEBC004EC7B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3A3878E232FFEBC004EC7B0 /* Assets.xcassets */; };
 		C3A38792232FFEBC004EC7B0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3A38791232FFEBC004EC7B0 /* Preview Assets.xcassets */; };
 		C3A38795232FFEBC004EC7B0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3A38793232FFEBC004EC7B0 /* LaunchScreen.storyboard */; };
+		EAAFBC03233D289D00FD7413 /* CircleTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAFBC02233D289D00FD7413 /* CircleTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		C3A38791232FFEBC004EC7B0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C3A38794232FFEBC004EC7B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C3A38796232FFEBC004EC7B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EAAFBC02233D289D00FD7413 /* CircleTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				C3A3878C232FFEBB004EC7B0 /* ContentView.swift */,
+				EAAFBC02233D289D00FD7413 /* CircleTableView.swift */,
 				C37D0BBD23368113007798F4 /* CircleView.swift */,
 				C37D0BC123368181007798F4 /* CircleShape.swift */,
 				C37D0BBF23368135007798F4 /* TimeDetailView.swift */,
@@ -217,6 +220,7 @@
 				C37D0BC42336BED3007798F4 /* RowColDetailView.swift in Sources */,
 				C3A3878D232FFEBB004EC7B0 /* ContentView.swift in Sources */,
 				C37D0BBC23359D3D007798F4 /* CircleState.swift in Sources */,
+				EAAFBC03233D289D00FD7413 /* CircleTableView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
